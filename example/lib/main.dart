@@ -27,5 +27,5 @@ void scanWithAnyline() async {
   /// Convert the stringResult to a Map to access the result fields. It is
   /// recommended to create result classes that fit your use case. For more
   /// information on that, visit the Flutter Guide on documentation.anyline.com.
-  Map<String, dynamic> result = jsonDecode(stringResult);
+  Map<String, dynamic> result = jsonDecode(stringResult ?? '');
 }

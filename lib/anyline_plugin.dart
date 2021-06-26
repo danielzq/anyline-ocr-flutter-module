@@ -26,7 +26,7 @@ class AnylinePlugin {
   /// and how to parse it, visit the [Anyline Documentation](https://documentation.anyline.com).
   ///
   /// Uses the third-party-package `permission_handler` to request camera permissions.
-  Future<String> startScanning(String configJson) async {
+  Future<String?> startScanning(String configJson) async {
     if (await Permission.camera.isPermanentlyDenied) {
       openAppSettings();
     } else if (await Permission.camera.request().isGranted) {

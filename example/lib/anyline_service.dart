@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class AnylineService {
-  Future<Result> scan(ScanMode mode);
+  Future<Result?> scan(ScanMode mode);
 
   List<Result> getResultList();
 
@@ -15,11 +15,12 @@ abstract class AnylineService {
 }
 
 class AnylineServiceImpl implements AnylineService {
-  AnylinePlugin anylinePlugin;
+  late AnylinePlugin anylinePlugin;
   List<Result> _results = [];
   String _sdkVersion = 'Unknown';
 
-  Future<Result> scan(ScanMode mode) async {
+  @override
+  Future<Result?> scan(ScanMode mode) async {
     try {
       Result result = await _callAnyline(mode);
       _saveResultToResultList(result);
@@ -66,9 +67,9 @@ class AnylineServiceImpl implements AnylineService {
   Future<Result> _callAnyline(ScanMode mode) async {
     String configJson = await _loadJsonConfigFromFile(mode.key);
 
-    String stringResult = await anylinePlugin.startScanning(configJson);
+    String? stringResult = await anylinePlugin.startScanning(configJson);
 
-    Map<String, dynamic> jsonResult = jsonDecode(stringResult);
+    Map<String, dynamic> jsonResult = jsonDecode(stringResult ?? '');
     return Result(jsonResult, mode, DateTime.now());
   }
 

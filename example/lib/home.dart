@@ -42,10 +42,10 @@ class _HomeState extends State<Home> {
   bool _scanTabBackButtonVisible = false;
   bool _resultsTabBackButtonVisible = false;
 
-  Widget _scanTab;
-  Widget _resultsTab;
+  Widget? _scanTab;
+  Widget? _resultsTab;
 
-  AnylineService _anylineService;
+  AnylineService? _anylineService;
 
   @override
   void initState() {
@@ -56,14 +56,14 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> scan(ScanMode mode) async {
-    Result result = await _anylineService.scan(mode);
+    Result? result = await _anylineService?.scan(mode);
     _openResultDisplay(result);
   }
 
-  _openResultDisplay(Result result) {
+  _openResultDisplay(Result? result) {
     Navigator.pushNamed(
         context,
-        result.scanMode.isCompositeScan()
+        result?.scanMode.isCompositeScan() == true
             ? CompositeResultDisplay.routeName
             : ResultDisplay.routeName,
         arguments: result);
@@ -84,7 +84,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _buildAppBar() {
+  PreferredSizeWidget _buildAppBar() {
     return PreferredSize(
       preferredSize: Size.fromHeight(100),
       child: AppBar(
@@ -149,7 +149,7 @@ class _HomeState extends State<Home> {
                           content: FittedBox(
                               fit: BoxFit.fitWidth,
                               child: Text(
-                                  'SDK Version ${_anylineService.getSdkVersion()}')),
+                                  'SDK Version ${_anylineService?.getSdkVersion()}')),
                         ));
               },
             ),
@@ -182,16 +182,16 @@ class _HomeState extends State<Home> {
     });
   }
 
-  Widget _buildBody() {
+  Widget? _buildBody() {
     return _bottomSelectedIndex == 0 ? _buildScanTab() : _buildResultList();
   }
 
-  Widget _buildScanTab() {
+  Widget? _buildScanTab() {
     return _scanTab;
   }
 
   Widget _buildResultList() {
-    return ResultList(_anylineService.getResultList());
+    return ResultList(_anylineService?.getResultList());
   }
 
   Widget _buildUseCases() {
@@ -469,10 +469,10 @@ class _HomeState extends State<Home> {
 }
 
 class ScanButton extends StatelessWidget {
-  ScanButton({@required this.text, this.onPressed});
+  ScanButton({required this.text, this.onPressed});
 
   final String text;
-  final Function onPressed;
+  final Function? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -513,7 +513,7 @@ class ScanButton extends StatelessWidget {
               ],
             ),
           ),
-          onPressed: onPressed,
+          onPressed: onPressed != null ? onPressed!() : null,
         ),
       ),
     );
@@ -521,11 +521,11 @@ class ScanButton extends StatelessWidget {
 }
 
 class UseCaseButton extends StatelessWidget {
-  UseCaseButton({this.image, @required this.text, this.onPressed});
+  UseCaseButton({required this.image, required this.text, this.onPressed});
 
   final ImageProvider image;
   final String text;
-  final Function onPressed;
+  final Function? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -572,7 +572,7 @@ class UseCaseButton extends StatelessWidget {
               ],
             ),
           ),
-          onPressed: onPressed,
+          onPressed: onPressed != null ? onPressed!() : null,
         ),
       ),
     );

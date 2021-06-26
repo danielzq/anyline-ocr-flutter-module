@@ -11,15 +11,15 @@ class AnylineException implements Exception {
   static AnylineException parse(Exception e) {
     if (e is PlatformException) {
       if (e.code == Constants.EXCEPTION_LICENSE) {
-        return AnylineLicenseException(e.message);
+        return AnylineLicenseException(e.message ?? '');
       } else if (e.code == Constants.EXCEPTION_CONFIG) {
-        return AnylineConfigException(e.message);
+        return AnylineConfigException(e.message ?? '');
       } else if (e.code == Constants.EXCEPTION_NO_CAMERA_PERMISSION) {
-        return AnylineCameraPermissionException(e.message);
+        return AnylineCameraPermissionException(e.message ?? '');
       } else if (e.code == Constants.EXCEPTION_CORE) {
-        return AnylineCoreException(e.message);
+        return AnylineCoreException(e.message ?? '');
       } else {
-        return AnylineException(e.message);
+        return AnylineException(e.message ?? '');
       }
     }
     return AnylineException(e.toString());

@@ -15,28 +15,28 @@ class ResultList extends StatelessWidget {
   final fullDate = DateFormat('d/M/y, HH:mm');
   final time = DateFormat('HH:mm');
 
-  final List<Result> results;
+  final List<Result>? results;
 
   ResultList(this.results);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: results.length > 0
+      child: (results?.length ?? 0) > 0
           ? ListView.builder(
           padding: EdgeInsets.all(10),
-              itemCount: results.length,
+              itemCount: results?.length ?? 0,
               itemBuilder: (BuildContext ctx, int index) {
-                DateTime timestamp = results[index].timestamp;
+                DateTime timestamp = results![index].timestamp;
                 String timestampString = timestamp.isToday()
                     ? 'Today, ${time.format(timestamp)}'
                     : timestamp.isYesterday()
                         ? 'Yesterday, ${time.format(timestamp)}'
                         : fullDate.format(timestamp);
 
-                return results[index].scanMode.isCompositeScan()
-                    ? CompositeResultListItem(results[index], timestampString)
-                : ResultListItem(results[index], timestampString);
+                return results![index].scanMode.isCompositeScan()
+                    ? CompositeResultListItem(results![index], timestampString)
+                : ResultListItem(results![index], timestampString);
           })
           : ListView(children: [
         Container(

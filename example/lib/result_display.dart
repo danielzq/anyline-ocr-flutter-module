@@ -13,7 +13,7 @@ class ResultDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Result result = ModalRoute.of(context).settings.arguments;
+    final Result result = ModalRoute.of(context)!.settings.arguments as Result;
 
     return Scaffold(
       backgroundColor: Styles.backgroundBlack,
@@ -42,7 +42,7 @@ class CompositeResultDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Result result = ModalRoute.of(context).settings.arguments;
+    final Result result = ModalRoute.of(context)!.settings.arguments as Result;
 
     var subResults = result.jsonMap.values.take(3);
 
@@ -143,7 +143,7 @@ class FullScreenImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String fullImagePath = ModalRoute.of(context).settings.arguments;
+    final String fullImagePath = ModalRoute.of(context)!.settings.arguments.toString();
 
     return GestureDetector(
       child: Container(
