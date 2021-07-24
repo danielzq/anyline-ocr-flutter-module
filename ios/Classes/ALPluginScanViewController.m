@@ -56,11 +56,9 @@
     [super viewDidLoad];
     
     NSError *error = nil;
-    
-    
+    [AnylineSDK setupWithLicenseKey:self.licensekey error:&error];
     self.scanView = [ALScanView scanViewForFrame:self.view.bounds
                                       configDict:self.anylineConfig
-                                      licenseKey:self.licensekey
                                         delegate:self
                                            error:&error];
     
@@ -217,14 +215,14 @@
     [self handleResult:dictResult result:scanResult];
 }
 
-- (void)anylineBarcodeScanPlugin:(ALBarcodeScanPlugin * _Nonnull)anylineBarcodeScanPlugin
-                   didFindResult:(ALBarcodeResult * _Nonnull)scanResult {
-    NSDictionary *dictResult = [ALPluginHelper dictionaryForBarcodeResult:scanResult
-                                                                  outline:self.scanView.scanViewPlugin.outline
-                                                                  quality:self.quality];
-    
-    [self handleResult:dictResult result:scanResult];
-}
+//- (void)anylineBarcodeScanPlugin:(ALBarcodeScanPlugin * _Nonnull)anylineBarcodeScanPlugin
+//                   didFindResult:(ALBarcodeResult * _Nonnull)scanResult {
+//    NSDictionary *dictResult = [ALPluginHelper dictionaryForBarcodeResult:scanResult
+//                                                                  outline:self.scanView.scanViewPlugin.outline
+//                                                                  quality:self.quality];
+//    
+//    [self handleResult:dictResult result:scanResult];
+//}
 
 - (void)anylineMeterScanPlugin:(ALMeterScanPlugin * _Nonnull)anylineMeterScanPlugin
                  didFindResult:(ALMeterResult * _Nonnull)scanResult {

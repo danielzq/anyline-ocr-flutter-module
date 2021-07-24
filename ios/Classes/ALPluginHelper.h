@@ -9,7 +9,7 @@
 #import <Anyline/Anyline.h>
 #import <UIKit/UIKit.h>
 #import "ALJsonUIConfiguration.h"
-#import "ALNFCScanViewController.h"
+#import "ALPluginScanViewController.h"
 #import "ALRoundedView.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -18,11 +18,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)startScan:(NSDictionary *)config finished:(ALPluginCallback)callback;
 
-+ (ALBarcodeFormat)barcodeFormatFromString:(NSString *)barcodeFormat;
+//+ (ALBarcodeFormat)barcodeFormatFromString:(NSString *)barcodeFormat;
 
-+ (NSString *)stringFromBarcodeFormat:(ALBarcodeFormat)barcodeFormat;
+//+ (NSString *)stringFromBarcodeFormat:(ALBarcodeFormat)barcodeFormat;
 
-+ (NSDictionary<NSString *, NSNumber *> *)barcodesFormatDict;
+//+ (NSDictionary<NSString *, NSNumber *> *)barcodesFormatDict;
 
 + (ALScanMode)scanModeFromString:(NSString *)scanMode;
 
@@ -72,9 +72,9 @@ NS_ASSUME_NONNULL_BEGIN
                                  outline:(ALSquare *)outline
                                  quality:(NSInteger)quality;
 
-+ (NSDictionary *)dictionaryForBarcodeResult:(ALBarcodeResult *)scanResult
-                                     outline:(ALSquare *)outline
-                                     quality:(NSInteger)quality;
+//+ (NSDictionary *)dictionaryForBarcodeResult:(ALBarcodeResult *)scanResult
+//                                     outline:(ALSquare *)outline
+//                                     quality:(NSInteger)quality;
 
 + (NSDictionary *)dictionaryForLicensePlateResult:(ALLicensePlateResult *)scanResult
                                  detectedBarcodes:(NSMutableArray<NSDictionary *> *)detectedBarcodes

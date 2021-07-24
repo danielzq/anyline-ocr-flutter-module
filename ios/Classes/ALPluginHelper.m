@@ -21,110 +21,73 @@
     
     [[UIApplication sharedApplication] keyWindow].rootViewController.modalPresentationStyle = UIModalPresentationFullScreen;
     
-    NSDictionary *nfcPlugin = [pluginConf valueForKeyPath:@"viewPlugin.plugin.nfcPlugin"];
-    if (nfcPlugin) {
-        if (@available(iOS 13.0, *)) {
-            if (![ALNFCDetector readingAvailable]) {
-                callback(nil, @"NFC passport reading is not supported on this device or app.");
-                return;
-            }
-            
-            ALNFCScanViewController *nfcScanViewController = [[ALNFCScanViewController alloc] initWithLicensekey:licenseKey
-                                                                                                   configuration:pluginConf
-                                                                                                        uiConfig:jsonUIConf
-                                                                                                        finished:callback];
-            if([pluginConf valueForKey:@"quality"]){
-                nfcScanViewController.quality = [[pluginConf valueForKey:@"quality"] integerValue];
-            }
-                       
-            if([pluginConf valueForKey:@"cropAndTransformErrorMessage"]){
-                NSString *str = [pluginConf objectForKey:@"cropAndTransformErrorMessage"];
-                nfcScanViewController.cropAndTransformErrorMessage = str;
-            }
-                       
-            if ([pluginConf valueForKey:@"nativeBarcodeEnabled"]) {
-                nfcScanViewController.nativeBarcodeEnabled = [[pluginConf objectForKey:@"nativeBarcodeEnabled"] boolValue];
-            }
-                       
-            if(nfcScanViewController != nil){
-                [nfcScanViewController setModalPresentationStyle: UIModalPresentationFullScreen];
-                [[[UIApplication sharedApplication] keyWindow].rootViewController presentViewController:nfcScanViewController
-                                                                                               animated:YES
-                                                                                             completion:nil];
-            }
-        } else {
-            callback(nil, @"NFC passport reading is only supported on iOS 13 and later.");
-            return;
-        }
-    } else {
-        ALPluginScanViewController *pluginScanViewController = [[ALPluginScanViewController alloc] initWithLicensekey:licenseKey
-                                                                                                        configuration:pluginConf
-                                                                                                      uiConfiguration:jsonUIConf
-                                                                                                             finished:callback];
-            
-        if ([pluginConf valueForKey:@"quality"]){
-            pluginScanViewController.quality = [[pluginConf valueForKey:@"quality"] integerValue];
-        }
-            
-        if ([pluginConf valueForKey:@"cropAndTransformErrorMessage"]){
-            NSString *str = [pluginConf objectForKey:@"cropAndTransformErrorMessage"];
-            pluginScanViewController.cropAndTransformErrorMessage = str;
-        }
-            
-        if ([pluginConf valueForKey:@"nativeBarcodeEnabled"]) {
-            pluginScanViewController.nativeBarcodeEnabled = [[pluginConf objectForKey:@"nativeBarcodeEnabled"] boolValue];
-        }
-            
-        if (pluginScanViewController != nil){
-            [pluginScanViewController setModalPresentationStyle: UIModalPresentationFullScreen];
-            [[[UIApplication sharedApplication] keyWindow].rootViewController presentViewController:pluginScanViewController
-                                                                                           animated:YES
-                                                                                         completion:nil];
-        }
+    ALPluginScanViewController *pluginScanViewController = [[ALPluginScanViewController alloc] initWithLicensekey:licenseKey
+                                                                                                    configuration:pluginConf
+                                                                                                  uiConfiguration:jsonUIConf
+                                                                                                         finished:callback];
+        
+    if ([pluginConf valueForKey:@"quality"]){
+        pluginScanViewController.quality = [[pluginConf valueForKey:@"quality"] integerValue];
+    }
+        
+    if ([pluginConf valueForKey:@"cropAndTransformErrorMessage"]){
+        NSString *str = [pluginConf objectForKey:@"cropAndTransformErrorMessage"];
+        pluginScanViewController.cropAndTransformErrorMessage = str;
+    }
+        
+    if ([pluginConf valueForKey:@"nativeBarcodeEnabled"]) {
+        pluginScanViewController.nativeBarcodeEnabled = [[pluginConf objectForKey:@"nativeBarcodeEnabled"] boolValue];
+    }
+        
+    if (pluginScanViewController != nil){
+        [pluginScanViewController setModalPresentationStyle: UIModalPresentationFullScreen];
+        [[[UIApplication sharedApplication] keyWindow].rootViewController presentViewController:pluginScanViewController
+                                                                                       animated:YES
+                                                                                     completion:nil];
     }
 }
 
 #pragma mark - String convertions
 
-+ (ALBarcodeFormat)barcodeFormatFromString:(NSString *)barcodeFormat {
-    NSDictionary<NSString *, NSNumber *> *scanModes = [self barcodesFormatDict];
-    
-    return [scanModes[barcodeFormat] integerValue];
-}
-
-+ (NSString *)stringFromBarcodeFormat:(ALBarcodeFormat)barcodeFormat {
-    NSDictionary<NSString *, NSNumber *> *barcodeFormats = [self barcodesFormatDict];
-    return [barcodeFormats allKeysForObject:@(barcodeFormat)][0];
-}
-
-+ (NSDictionary<NSString *, NSNumber *> *)barcodesFormatDict {
-    static NSDictionary<NSString *, NSNumber *> * scanModes = nil;
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        scanModes = @{
-                      @"AZTEC" : @(ALCodeTypeAztec),
-                      @"CODABAR" : @(ALCodeTypeCodabar),
-                      @"CODE_39" : @(ALCodeTypeCode39),
-                      @"CODE_93" : @(ALCodeTypeCode93),
-                      @"CODE_128" : @(ALCodeTypeCode128),
-                      @"DATA_MATRIX" : @(ALCodeTypeDataMatrix),
-                      @"EAN_8" : @(ALCodeTypeEAN8),
-                      @"EAN_13" : @(ALCodeTypeEAN13),
-                      @"ITF" : @(ALCodeTypeITF),
-                      @"PDF_417" : @(ALCodeTypePDF417),
-                      @"QR_CODE" : @(ALCodeTypeQR),
-                      @"RSS_14" : @(ALCodeTypeRSS14),
-                      @"RSS_EXPANDED" : @(ALCodeTypeRSSExpanded),
-                      @"UPC_A" : @(ALCodeTypeUPCA),
-                      @"UPC_E" : @(ALCodeTypeUPCE),
-                      @"UPC_EAN_EXTENSION" : @(ALCodeTypeUPCEANExtension),
-                      @"UNKNOWN" : @(ALHeatMeter6),
-                      };
-    });
-    
-    return scanModes;
-}
+//+ (ALBarcodeFormat)barcodeFormatFromString:(NSString *)barcodeFormat {
+//    NSDictionary<NSString *, NSNumber *> *scanModes = [self barcodesFormatDict];
+//    
+//    return [scanModes[barcodeFormat] integerValue];
+//}
+//
+//+ (NSString *)stringFromBarcodeFormat:(ALBarcodeFormat)barcodeFormat {
+//    NSDictionary<NSString *, NSNumber *> *barcodeFormats = [self barcodesFormatDict];
+//    return [barcodeFormats allKeysForObject:@(barcodeFormat)][0];
+//}
+//
+//+ (NSDictionary<NSString *, NSNumber *> *)barcodesFormatDict {
+//    static NSDictionary<NSString *, NSNumber *> * scanModes = nil;
+//    
+//    static dispatch_once_t onceToken;
+//    dispatch_once(&onceToken, ^{
+//        scanModes = @{
+//                      @"AZTEC" : @(ALCodeTypeAztec),
+//                      @"CODABAR" : @(ALCodeTypeCodabar),
+//                      @"CODE_39" : @(ALCodeTypeCode39),
+//                      @"CODE_93" : @(ALCodeTypeCode93),
+//                      @"CODE_128" : @(ALCodeTypeCode128),
+//                      @"DATA_MATRIX" : @(ALCodeTypeDataMatrix),
+//                      @"EAN_8" : @(ALCodeTypeEAN8),
+//                      @"EAN_13" : @(ALCodeTypeEAN13),
+//                      @"ITF" : @(ALCodeTypeITF),
+//                      @"PDF_417" : @(ALCodeTypePDF417),
+//                      @"QR_CODE" : @(ALCodeTypeQR),
+//                      @"RSS_14" : @(ALCodeTypeRSS14),
+//                      @"RSS_EXPANDED" : @(ALCodeTypeRSSExpanded),
+//                      @"UPC_A" : @(ALCodeTypeUPCA),
+//                      @"UPC_E" : @(ALCodeTypeUPCE),
+//                      @"UPC_EAN_EXTENSION" : @(ALCodeTypeUPCEANExtension),
+//                      @"UNKNOWN" : @(ALHeatMeter6),
+//                      };
+//    });
+//    
+//    return scanModes;
+//}
 
 + (ALScanMode)scanModeFromString:(NSString *)scanMode {
     NSDictionary<NSString *, NSNumber *> *scanModes = [ALPluginHelper scanModesDict];
@@ -151,7 +114,7 @@
                       @"AUTO_ANALOG_DIGITAL_METER" : @(ALAutoAnalogDigitalMeter),
                       @"DIAL_METER" : @(ALDialMeter),
                       @"ANALOG_METER" : @(ALAnalogMeter),
-                      @"BARCODE" : @(ALBarcode),
+//                      @"BARCODE" : @(ALBarcode),
                       @"SERIAL_NUMBER" : @(ALSerialNumber),
                       @"DOT_MATRIX_METER" : @(ALDotMatrixMeter),
                       @"DIGITAL_METER" : @(ALDigitalMeter),
@@ -661,33 +624,33 @@
     return dictResult;
 }
 
-+ (NSDictionary *)dictionaryForBarcodeResult:(ALBarcodeResult *)scanResult
-                                     outline:(ALSquare *)outline
-                                     quality:(NSInteger)quality {
-    CGFloat dividedCompRate = (CGFloat)quality/100;
-    
-    NSMutableDictionary *dictResult = [NSMutableDictionary dictionaryWithCapacity:2];
-    
-    [dictResult setObject:(NSString *)scanResult.result forKey:@"value"];
-    if (!scanResult.barcodeFormat) {
-        [dictResult setObject:@"Unknown" forKey:@"barcodeFormat"];
-    } else {
-        [dictResult setObject:[ALPluginHelper stringFromBarcodeFormat:scanResult.barcodeFormat] forKey:@"barcodeFormat"];
-    }
-    
-    
-    NSString *imagePath = [ALPluginHelper saveImageToFileSystem:scanResult.image compressionQuality:dividedCompRate];
-    
-    [dictResult setValue:imagePath forKey:@"imagePath"];
-    
-    NSString *fullImagePath = [ALPluginHelper saveImageToFileSystem:scanResult.fullImage compressionQuality:dividedCompRate];
-    [dictResult setValue:fullImagePath forKey:@"fullImagePath"];
-    
-    [dictResult setValue:@(scanResult.confidence) forKey:@"confidence"];
-    [dictResult setValue:[ALPluginHelper stringForOutline:outline] forKey:@"outline"];
-    
-    return dictResult;
-}
+//+ (NSDictionary *)dictionaryForBarcodeResult:(ALBarcodeResult *)scanResult
+//                                     outline:(ALSquare *)outline
+//                                     quality:(NSInteger)quality {
+//    CGFloat dividedCompRate = (CGFloat)quality/100;
+//    
+//    NSMutableDictionary *dictResult = [NSMutableDictionary dictionaryWithCapacity:2];
+//    
+//    [dictResult setObject:(NSString *)scanResult.result forKey:@"value"];
+//    if (!scanResult.barcodeFormat) {
+//        [dictResult setObject:@"Unknown" forKey:@"barcodeFormat"];
+//    } else {
+//        [dictResult setObject:[ALPluginHelper stringFromBarcodeFormat:scanResult.barcodeFormat] forKey:@"barcodeFormat"];
+//    }
+//    
+//    
+//    NSString *imagePath = [ALPluginHelper saveImageToFileSystem:scanResult.image compressionQuality:dividedCompRate];
+//    
+//    [dictResult setValue:imagePath forKey:@"imagePath"];
+//    
+//    NSString *fullImagePath = [ALPluginHelper saveImageToFileSystem:scanResult.fullImage compressionQuality:dividedCompRate];
+//    [dictResult setValue:fullImagePath forKey:@"fullImagePath"];
+//    
+//    [dictResult setValue:@(scanResult.confidence) forKey:@"confidence"];
+//    [dictResult setValue:[ALPluginHelper stringForOutline:outline] forKey:@"outline"];
+//    
+//    return dictResult;
+//}
 
 + (NSDictionary *)dictionaryForLicensePlateResult:(ALLicensePlateResult *)scanResult
                                  detectedBarcodes:(NSMutableArray<NSDictionary *> *)detectedBarcodes
@@ -781,10 +744,10 @@
                                              quality:quality];
         
     } else if ([result isKindOfClass:[ALBarcodeResult class]]) {
-        return [ALPluginHelper dictionaryForBarcodeResult:(ALBarcodeResult *)result
-                                                  outline:[[ALSquare alloc] init]
-                                                  quality:quality];
-        
+//        return [ALPluginHelper dictionaryForBarcodeResult:(ALBarcodeResult *)result
+//                                                  outline:[[ALSquare alloc] init]
+//                                                  quality:quality];
+        return nil;
     } else if ([result isKindOfClass:[ALOCRResult class]]) {
         return [ALPluginHelper dictionaryForOCRResult:(ALOCRResult *)result
                                      detectedBarcodes:detectedBarcodes
