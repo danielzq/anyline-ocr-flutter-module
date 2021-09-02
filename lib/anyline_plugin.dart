@@ -20,7 +20,10 @@ class AnylinePlugin {
   }
 
   static Future initScanning(String configJson) async {
-    await _channel.invokeMethod(Constants.METHOD_INIT_ANYLINE);
+    final Map<String, String> config = {
+      Constants.EXTRA_CONFIG_JSON: configJson
+    };
+    await _channel.invokeMethod(Constants.METHOD_INIT_ANYLINE, config);
   }
 
   /// Starts the Anyline SDK and invokes the scanning process with the given [configJson].
