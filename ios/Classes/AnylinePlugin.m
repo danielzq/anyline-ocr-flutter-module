@@ -41,6 +41,15 @@
                                                              encoding:NSUTF8StringEncoding];
           result(jsonResultString);
       }];
+  } else if ([@"METHOD_INIT_ANYLINE" isEqualToString:call.method]) {
+      NSError *error;
+      NSString *config = call.arguments[@"EXTRA_CONFIG_JSON"];
+      NSDictionary *dictConfig = [NSJSONSerialization JSONObjectWithData:[config dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:&error];
+      NSString *licenseKey = [dictConfig objectForKey:@"license"];
+      if (licenseKey != nil) {
+          [AnylineSDK setupWithLicenseKey:licenseKey error:&error];
+      }
+      result(@"");
   } else {
       result(FlutterMethodNotImplemented);
   }
