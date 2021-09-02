@@ -2,6 +2,7 @@
 abstract class Constants {
   static const String METHOD_GET_SDK_VERSION = "METHOD_GET_SDK_VERSION";
   static const String METHOD_START_ANYLINE = "METHOD_START_ANYLINE";
+  static const String METHOD_INIT_ANYLINE = "METHOD_INIT_ANYLINE";
 
   static const String EXTRA_CONFIG_JSON = "EXTRA_CONFIG_JSON";
   static const String EXTRA_LICENSE_KEY = "EXTRA_LICENSE_KEY";
