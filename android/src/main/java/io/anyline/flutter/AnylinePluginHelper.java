@@ -2,11 +2,9 @@ package io.anyline.flutter;
 
 import android.content.Context;
 import android.util.Log;
-import android.util.SparseArray;
 import android.widget.Toast;
 
-import com.google.android.gms.vision.barcode.Barcode;
-import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
+import com.google.android.libraries.barhopper.Barcode;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,12 +17,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import at.nineyards.anyline.camera.NativeBarcodeResultListener;
-import at.nineyards.anyline.util.AssetUtil;
-import at.nineyards.anyline.util.TempFileUtil;
+import io.anyline.camera.NativeBarcodeResultListener;
 import io.anyline.plugin.ScanResult;
 import io.anyline.plugin.barcode.BarcodeFormat;
 import io.anyline.plugin.meter.MeterScanMode;
+import io.anyline.util.AssetUtil;
+import io.anyline.util.TempFileUtil;
 import io.anyline.view.ScanView;
 
 public class AnylinePluginHelper {
@@ -33,7 +31,7 @@ public class AnylinePluginHelper {
 
     private static Toast notificationToast;
     private static boolean nativeBarcodeEnabled = false;
-    private static List<FirebaseVisionBarcode> finalBarcodeList;
+    private static List<com.google.mlkit.vision.barcode.Barcode> finalBarcodeList;
 
     public static JSONObject setLanguages(JSONObject json, Context context) {
         if (json.has("viewPlugin")) {
@@ -174,7 +172,7 @@ public class AnylinePluginHelper {
         return jsonObject;
     }
 
-    public static JSONObject wrapBarcodeInJson(FirebaseVisionBarcode b) {
+    public static JSONObject wrapBarcodeInJson(com.google.mlkit.vision.barcode.Barcode b) {
         JSONObject json = new JSONObject();
 
         try {
@@ -187,8 +185,8 @@ public class AnylinePluginHelper {
         return json;
     }
 
-    private static void setNativeBarcodeList(List<FirebaseVisionBarcode> barcodes) {
-        final List<FirebaseVisionBarcode> barcodeList = new ArrayList<>();
+    private static void setNativeBarcodeList(List<com.google.mlkit.vision.barcode.Barcode> barcodes) {
+        final List<com.google.mlkit.vision.barcode.Barcode> barcodeList = new ArrayList<>();
         final List<String> barcodesDisplayedVal = new ArrayList<>();
 
         if (barcodeList.size() == 0) {
@@ -210,7 +208,7 @@ public class AnylinePluginHelper {
 
     }
 
-    private static List<FirebaseVisionBarcode> getNativeBarcodeList() {
+    private static List<com.google.mlkit.vision.barcode.Barcode> getNativeBarcodeList() {
         return finalBarcodeList;
     }
 
@@ -264,14 +262,15 @@ public class AnylinePluginHelper {
     public static void enableNativeBarcode(ScanView anylineScanView, final List<BarcodeFormat> barcodeFormats) {
         anylineScanView.getCameraView().enableBarcodeDetection(new NativeBarcodeResultListener() {
             @Override
+            public void onSuccess(List<com.google.mlkit.vision.barcode.Barcode> barcodes) {
+                setNativeBarcodeList(barcodes);
+            }
+
+            @Override
             public void onFailure(String e) {
                 //finalBarcodeList=null;  // otherwise result from previous scan would be shown
             }
 
-            @Override
-            public void onSuccess(List<FirebaseVisionBarcode> barcodes) {
-                setNativeBarcodeList(barcodes);
-            }
         }, barcodeFormats);
     }
 
